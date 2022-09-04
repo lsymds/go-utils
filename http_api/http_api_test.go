@@ -42,9 +42,9 @@ func TestResponseMethodsReturnCorrectResponses(t *testing.T) {
 			test.method(w, er)
 
 			if w.Code != test.status {
-				t.Errorf("expected status %d, got: %d", test.status, w.Code)
+				t.Fatalf("expected status %d, got: %d", test.status, w.Code)
 			} else if r := readBodyResponse(w.Body); r.Name != "Bob Smith" {
-				t.Errorf("expected name 'Bob Smith', got: %s", r.Name)
+				t.Fatalf("expected name 'Bob Smith', got: %s", r.Name)
 			}
 		})
 	}
