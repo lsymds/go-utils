@@ -73,26 +73,28 @@ func (d *Database) migrate() error {
 	}
 	sort.Strings(fileNames)
 
+	// Begin a transaction, rolling it back by default.
+	tx, err := d.db.Begin()
+	if err != nil {
+		return fmt.Errorf("unable to start transaction: %w", err)
+	}
+	defer tx.Rollback()
+
 	// Then execute them all.
 	for _, fileName := range fileNames {
-		if err = d.migrateFile(fileName); err != nil {
+		if err = d.migrateFile(fileName, tx); err != nil {
 			return err
 		}
 	}
+
+	// Commit the transaction if we got this far.
+	tx.Commit()
 
 	return nil
 }
 
 // migrateFile runs a migration file if it hasn't been ran already.
-func (d *Database) migrateFile(fileName string) error {
-	// Begin a transaction for the migration.
-	tx, err := d.db.Begin()
-	if err != nil {
-		return fmt.Errorf("unable to start tx: %w", err)
-	}
-
-	defer tx.Rollback()
-
+func (d *Database) migrateFile(fileName string, tx *sql.Tx) error {
 	// Check if the migration has been ran before and, if it has, return early.
 	var c int
 	if err := tx.QueryRow("SELECT COUNT(*) FROM migrations WHERE name = ?", fileName).Scan(&c); err != nil {
@@ -112,8 +114,6 @@ func (d *Database) migrateFile(fileName string) error {
 	if _, err := tx.Exec("INSERT INTO migrations (name) VALUES (?)", fileName); err != nil {
 		return err
 	}
-
-	tx.Commit()
 
 	return nil
 }
