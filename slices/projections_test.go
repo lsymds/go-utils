@@ -30,3 +30,30 @@ func TestMap(t *testing.T) {
 		}
 	})
 }
+
+func TestFlatMap(t *testing.T) {
+	type orderItem struct {
+		value int
+	}
+
+	type order struct {
+		items []orderItem
+	}
+
+	res, err := slices.FlatMap(
+		[]order{
+			{items: []orderItem{{value: 5}}},
+			{items: []orderItem{{value: 10}, {value: 15}}},
+			{items: []orderItem{{value: 85}}},
+			{items: []orderItem{{value: 32}}},
+		},
+		func(el *order) []orderItem {
+			return el.items
+		},
+	)
+	if err != nil {
+		t.Fatalf("unexpected err: %s", err)
+	} else if len(res) != 5 {
+		t.Fatalf("count of flatmapped items was not 5, got: %d", len(res))
+	}
+}
