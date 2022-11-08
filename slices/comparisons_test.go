@@ -42,9 +42,9 @@ func TestMinBy(t *testing.T) {
 
 	res, err := slices.MinBy(
 		[]s{
+			{id: 350, name: "Baz"},
 			{id: 8384, name: "Foo"},
 			{id: 90389, name: "Bar"},
-			{id: 350, name: "Baz"},
 		},
 		func(el *s) int {
 			return el.id
@@ -85,4 +85,29 @@ func TestMax(t *testing.T) {
 			t.Fatalf("expected min to return 959049050909340922, got: %d", res)
 		}
 	})
+}
+
+func TestMaxBy(t *testing.T) {
+	type s struct {
+		id   int
+		name string
+	}
+
+	res, err := slices.MaxBy(
+		[]s{
+			{id: 8384, name: "Foo"},
+			{id: 90389, name: "Bar"},
+			{id: 350, name: "Baz"},
+		},
+		func(el *s) int {
+			return el.id
+		},
+	)
+	if err != nil {
+		t.Fatal("did not expect error to be returned from slices.Min")
+	} else if res.id != 90389 {
+		t.Fatalf("expected MaxBy to return id of 90389, got: %d", res.id)
+	} else if res.name != "Bar" {
+		t.Fatalf("expected MaxBy to return name of Bar, got: %s", res.name)
+	}
 }
