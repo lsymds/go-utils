@@ -58,3 +58,31 @@ func TestMinBy(t *testing.T) {
 		t.Fatalf("expected minby to return name of Baz, got: %s", res.name)
 	}
 }
+
+func TestMax(t *testing.T) {
+	t.Run("integers", func(t *testing.T) {
+		if res, err := slices.Max([]int{10, 15, 1, 8, 3}); err != nil {
+			t.Fatal("did not expect error to be returned from slices.Min")
+		} else if res != 15 {
+			t.Fatalf("expected max to return 15, got: %d", res)
+		}
+	})
+
+	t.Run("floats", func(t *testing.T) {
+		if res, err := slices.Max([]float32{8.384, 1100.394, 8.383, 7.4812, 7.4810849}); err != nil {
+			t.Fatal("did not expect error to be returned from slices.Min")
+		} else if res != 1100.394 {
+			t.Fatalf("expected min to return 1100.394, got: %f", res)
+		}
+	})
+
+	t.Run("derived types", func(t *testing.T) {
+		type d int64
+
+		if res, err := slices.Max([]d{8, 123981289389123, 588585858585, 9393939393939, 32020, 959049050909340922}); err != nil {
+			t.Fatal("did not expect error to be returned from slices.Min")
+		} else if res != 959049050909340922 {
+			t.Fatalf("expected min to return 959049050909340922, got: %d", res)
+		}
+	})
+}
