@@ -2,7 +2,7 @@
 
 Numerous utilities for building go projects.
 
-# Utilities
+# Packages
 
 - slices - A selection of utility slice functions.
 
