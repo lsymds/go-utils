@@ -14,7 +14,9 @@ func Logging(h http.Handler, enricher func(c *zerolog.Context)) http.Handler {
 			Str("url", r.URL.String()).
 			Str("method", r.Method)
 
-		enricher(&l)
+		if enricher != nil {
+			enricher(&l)
+		}
 
 		r = r.WithContext(l.Logger().WithContext(r.Context()))
 
