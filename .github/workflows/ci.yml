@@ -21,3 +21,5 @@ jobs:
           go test .
           cd ../../pkg/slices/
           go test .
+          cd ../../pkg/http/middleware/
+          go test .
