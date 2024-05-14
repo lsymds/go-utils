@@ -7,6 +7,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// EmptyLoggingEnricher is a no-op log enricher designed to be used with the [Logging] middleware.
+var EmptyLoggingEnricher = func(c *zerolog.Context) {}
+
 // Logging is a middleware that adds a logger enriched with details of the HTTP request to the request's context.
 func Logging(h http.Handler, enricher func(c *zerolog.Context)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
